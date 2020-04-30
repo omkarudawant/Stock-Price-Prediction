@@ -71,39 +71,40 @@ df = pd.read_csv(eval(input('Enter path/name of csv file: ')),
                  index_col=[0],
                  parse_dates=True)
 
-# define input sequence
-raw_seq = list(df.values)
+if __name__ == '__main__':
+    # define input sequence
+    raw_seq = list(df.values)
 
-# choose a number of time steps
-n_steps = int(eval(input('Enter number of days to look behind: ')))
+    # choose a number of time steps
+    n_steps = int(eval(input('Enter number of days to look behind: ')))
 
-# split into samples
-X_train, X_test, y_train, y_test, X_val, y_val = split_sequence(raw_seq,
-                                                                n_steps,
-                                                                train_size=0.9)
+    # split into samples
+    X_train, X_test, y_train, y_test, X_val, y_val = split_sequence(raw_seq,
+                                                                    n_steps,
+                                                                    train_size=0.9)
 
-# reshape from [samples, timesteps] into [samples, timesteps, features]
-n_features = 1
-X_train = X_train.reshape((X_train.shape[0], X_train.shape[1], n_features))
-X_test = X_test.reshape((X_test.shape[0], X_test.shape[1], n_features))
-X_val = X_val.reshape((X_val.shape[0], X_val.shape[1], n_features))
+    # reshape from [samples, timesteps] into [samples, timesteps, features]
+    n_features = 1
+    X_train = X_train.reshape((X_train.shape[0], X_train.shape[1], n_features))
+    X_test = X_test.reshape((X_test.shape[0], X_test.shape[1], n_features))
+    X_val = X_val.reshape((X_val.shape[0], X_val.shape[1], n_features))
 
-model_vanilla = train_model(X_train, y_train, X_val, y_val, n_steps,
-                            n_features)
+    model_vanilla = train_model(X_train, y_train, X_val, y_val, n_steps,
+                                n_features)
 
-# demonstrate prediction
-yhat = model_vanilla.predict(X_test, verbose=0)
+    # demonstrate prediction
+    yhat = model_vanilla.predict(X_test, verbose=0)
 
-# Evaluation metrics
-r2 = round(r2_score(y_test, yhat), 3)
-mape = round(mean_absolute_percentage_error(y_test, yhat), 3)
+    # Evaluation metrics
+    r2 = round(r2_score(y_test, yhat), 3)
+    mape = round(mean_absolute_percentage_error(y_test, yhat), 3)
 
-# Saving the model
-model_name = '../models/vanilla_lstm-' + f'r2({r2})-mape({mape}).h5'
-model_vanilla.save(model_name)
-print(f'Model saved in {model_name}')
+    # Saving the model
+    model_name = '../models/vanilla_lstm-' + f'r2({r2})-mape({mape}).h5'
+    model_vanilla.save(model_name)
+    print(f'Model saved in {model_name}')
 
-# Printing the Evaluation metrics
-print(
-    f'\nr2(0 to 1, higher the better): {r2}\nMape(0 to 100, lower the better): {mape}'
-)
+    # Printing the Evaluation metrics
+    print(
+        f'\nr2(0 to 1, higher the better): {r2}\nMape(0 to 100, lower the better): {mape}'
+    )
