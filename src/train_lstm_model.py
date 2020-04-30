@@ -66,12 +66,12 @@ def train_model(X_train, y_train, X_val, y_val, n_steps, n_features):
     print('Training done !')
     return model_vanilla
 
-
-df = pd.read_csv(eval(input('Enter path/name of csv file: ')),
+if __name__ == '__main__':
+    
+    df = pd.read_csv(eval(input('Enter path/name of csv file: ')),
                  index_col=[0],
                  parse_dates=True)
-
-if __name__ == '__main__':
+    
     # define input sequence
     raw_seq = list(df.values)
 
